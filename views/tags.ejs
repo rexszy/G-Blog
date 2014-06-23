@@ -1,0 +1,5 @@
+<%- include /common/header %>
+<% posts.forEach(function (tag, index) { %>
+    <a class="tag" href="/post/tag/<%= tag %>"><%= tag %></a>
+<% }) %>
+<%- include /common/footer %>
