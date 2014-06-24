@@ -8,7 +8,7 @@
     标签：
     <% post.tags.forEach(function (tag, index) { %>
         <% if (tag) { %>
-            <a class="tag" href="/tags/<%= tag %>"><%= tag %></a>
+            <a class="tag" href="/post/tag/<%= tag %>"><%= tag %></a>
         <% } %>
     <% }) %>
     <% if (post.reprint_info.reprint_from) { %>

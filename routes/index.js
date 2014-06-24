@@ -101,8 +101,10 @@ module.exports = function(app) {
      // 获取发布博文页面
     app.get('/post/new', checkLogin);
     app.get('/post/new', function (req, res) {
+        var post = new Post(req.session.user.name,'','',['','',''],'');
         res.render('post-new', {
             title: '发表',
+            post: post,
             user: req.session.user,
             success: req.flash('success').toString(),
             error: req.flash('error').toString()
@@ -195,7 +197,7 @@ module.exports = function(app) {
                 req.flash('error',err);
                 return res.redirect('/');
             }
-            res.render('tag', {
+            res.render('post-tag', {
                 title: 'TAG:' + req.params.tag,
                 posts: posts,
                 user: req.session.user,
@@ -247,7 +249,7 @@ module.exports = function(app) {
                     req.flash('error', err);
                     return res.redirect('/');
                 }
-                res.render('post/user', {
+                res.render('post-user', {
                     title: user.name,
                     posts: posts,
                     page: page,
@@ -268,7 +270,7 @@ module.exports = function(app) {
                 req.flash('error', err);
                 return res.redirect('/');
             }
-            res.render('post', {
+            res.render('post-detail', {
                 title: post.title,
                 post: post,
                 user: req.session.user,
@@ -304,15 +306,14 @@ module.exports = function(app) {
         });
     });
 
-    app.get('/edit/:name/:day/:title', checkLogin);
-    app.get('/edit/:name/:day/:title', function (req, res) {
-        var currentUser = req.session.user;
-        Post.edit(currentUser.name, req.params.day, req.params.title, function (err, post) {
+    app.get('/post/modify/:_id', checkLogin);
+    app.get('/post/modify/:_id', function (req, res) {
+        Post.getSource( req.params._id, function (err, post) {
             if (err) {
                 req.flash('error', err);
                 return res.redirect('back');
             }
-            res.render('edit', {
+            res.render('post-modify', {
                 title: '编辑',
                 post: post,
                 user: req.session.user,
@@ -322,11 +323,11 @@ module.exports = function(app) {
         });
     });
 
-    app.post('/edit/:name/:day/:title', checkLogin);
-    app.post('/edit/:name/:day/:title', function (req, res) {
+    app.post('/post/modify/:_id', checkLogin);
+    app.post('/post/modify/:_id', function (req, res) {
         var currentUser = req.session.user;
-        Post.update(currentUser.name, req.params.day, req.params.title, req.body.post, function (err) {
-            var url = '/u/' + req.params.name + '/' + req.params.day + '/' + req.params.title;
+        Post.update( req.params._id, currentUser.name, req.body.day, req.body.title, req.body.post, function (err) {
+            var url = '/post/view/' + req.params._id;
             if (err) {
                 req.flash('error', err);
                 return res.redirect(url);//出错！返回文章页

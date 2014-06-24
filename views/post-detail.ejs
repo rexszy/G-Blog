@@ -1,8 +1,8 @@
 <%- include /common/header %>
 <p>
 <% if (user && (user.name == post.name)) { %>
-    <span><a class="edit" href="/edit/<%= post.name %>/<%= post.time.day %>/<%= post.title %>">编辑</a></span>
-    <span><a class="edit" href="/remove/<%= post.name %>/<%= post.time.day %>/<%= post.title %>">删除</a></span>
+    <span><a class="edit" href="/post/modify/<%= post._id %>">编辑</a></span>
+    <span><a class="edit" href="/post/remove/<%= post._id %>">删除</a></span>
 <% } %>
 <% var flag = 1 %>
 <% if (user && (user.name != post.name)) { %>
@@ -24,12 +24,12 @@
 <% } %>
 </p>
 <p class="info">
-    作者：<a href="/u/<%= post.name %>"><%= post.name %></a> |
+    作者：<a href="/post/user/<%= post.name %>"><%= post.name %></a> |
     日期：<%= post.time.minute %> |
     标签：
     <% post.tags.forEach(function (tag, index) { %>
         <% if (tag) { %>
-            <a class="tag" href="/tags/<%= tag %>"><%= tag %></a>
+            <a class="tag" href="/post/tag/<%= tag %>"><%= tag %></a>
         <% } %>
     <% }) %>
     <% if (post.reprint_info.reprint_from) { %>
@@ -47,5 +47,5 @@
     <%= 0 %>
     <% } %>
 </p>
-<%- include comment %>
+<%- include /post/comment %>
 <%- include /common/footer %>
